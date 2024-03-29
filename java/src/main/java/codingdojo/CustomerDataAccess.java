@@ -8,31 +8,25 @@ public class CustomerDataAccess {
         this.customerDataLayer = customerDataLayer;
     }
 
-    public CustomerMatches loadCompanyCustomer(String externalId, String companyNumber) {
-        CustomerMatches matches = new CustomerMatches();
+    public Customer loadCompanyCustomer(String externalId, String companyNumber) {
+        // TODO check if companyNumber matches with founded by externalId
         Customer matchByExternalId = this.customerDataLayer.findByExternalId(externalId);
         if (matchByExternalId != null) {
-            matches.setCustomer(matchByExternalId);
-            matches.setMatchTerm("ExternalId");
-            Customer matchByMasterId = this.customerDataLayer.findByMasterExternalId(externalId);
-            if (matchByMasterId != null) matches.addDuplicate(matchByMasterId);
+            return matchByExternalId;
         } else {
             Customer matchByCompanyNumber = this.customerDataLayer.findByCompanyNumber(companyNumber);
-            if (matchByCompanyNumber != null) {
-                matches.setCustomer(matchByCompanyNumber);
-                matches.setMatchTerm("CompanyNumber");
-            }
+            return matchByCompanyNumber;
         }
-
-        return matches;
     }
 
-    public CustomerMatches loadPersonCustomer(String externalId) {
-        CustomerMatches matches = new CustomerMatches();
+    public Customer loadCompanyByMasterExternalId(String externalId) {
+        // TODO check about DataLayer and DataAccess 
+        return this.customerDataLayer.findByMasterExternalId(externalId);
+    }
+
+    public Customer loadPersonCustomer(String externalId) {
         Customer matchByPersonalNumber = this.customerDataLayer.findByExternalId(externalId);
-        matches.setCustomer(matchByPersonalNumber);
-        if (matchByPersonalNumber != null) matches.setMatchTerm("ExternalId");
-        return matches;
+        return matchByPersonalNumber;
     }
 
     public Customer updateCustomerRecord(Customer customer) {

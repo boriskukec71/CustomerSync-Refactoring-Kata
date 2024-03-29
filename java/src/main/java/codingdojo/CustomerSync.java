@@ -25,6 +25,9 @@ public class CustomerSync {
         Customer customer = customerMatches.getCustomer();
 
         if (customer == null) {
+            // createCustomer(externlaCustomer)
+            // created = true
+            // customerDataAccess.createCustomerRecord(customer);
             customer = new Customer();
             customer.setExternalId(externalCustomer.getExternalId());
             customer.setMasterExternalId(externalCustomer.getExternalId());
@@ -84,6 +87,7 @@ public class CustomerSync {
         customer.setPreferredStore(externalCustomer.getPreferredStore());
     }
 
+    // TODO createCustomer(Externalcustomer)
     private Customer createCustomer(Customer customer) {
         return this.customerDataAccess.createCustomerRecord(customer);
     }
@@ -107,29 +111,36 @@ public class CustomerSync {
         final String externalId = externalCustomer.getExternalId();
         final String companyNumber = externalCustomer.getCompanyNumber();
 
-        CustomerMatches customerMatches = customerDataAccess.loadCompanyCustomer(externalId, companyNumber);
+        final Customer customer = customerDataAccess.loadCompanyCustomer(externalId, companyNumber);
+        if (customer == null) {
+            // Notihing found just exit and return empty matches
+            return new CustomerMatches();
+        }
 
-        if (customerMatches.getCustomer() != null && !CustomerType.COMPANY.equals(customerMatches.getCustomer().getCustomerType())) {
+        if (!CustomerType.COMPANY.equals(customer.getCustomerType())) {
             throw new ConflictException("Existing customer for externalCustomer " + externalId + " already exists and is not a company");
         }
 
-        if ("ExternalId".equals(customerMatches.getMatchTerm())) {
-            String customerCompanyNumber = customerMatches.getCustomer().getCompanyNumber();
-            if (!companyNumber.equals(customerCompanyNumber)) {
-                customerMatches.getCustomer().setMasterExternalId(null);
-                customerMatches.addDuplicate(customerMatches.getCustomer());
-                customerMatches.setCustomer(null);
-                customerMatches.setMatchTerm(null);
+        CustomerMatches customerMatches = new CustomerMatches();
+        if (customer.getExternalId() !=null && customer.getExternalId().equals(externalId)) {
+            String customerCompanyNumber = customer.getCompanyNumber();
+            if (!companyNumber.equals(customerCompanyNumber)) { // company number does not match add as duplicate
+                customerMatches.addDuplicate(customer);
+            } else {
+                customerMatches.setCustomer(customer);
             }
-        } else if ("CompanyNumber".equals(customerMatches.getMatchTerm())) {
-            String customerExternalId = customerMatches.getCustomer().getExternalId();
+            Customer customerByMasterId = customerDataAccess.loadCompanyByMasterExternalId(externalId);
+            if (customerByMasterId != null) {   // customer found by masterExternalId, add it as a duplciate
+                customerMatches.addDuplicate(customerByMasterId);
+            }
+        } else {
+            String customerExternalId = customer.getExternalId();
             if (customerExternalId != null && !externalId.equals(customerExternalId)) {
                 throw new ConflictException("Existing customer for externalCustomer " + companyNumber + " doesn't match external id " + externalId + " instead found " + customerExternalId );
             }
-            Customer customer = customerMatches.getCustomer();
             customer.setExternalId(externalId);
             customer.setMasterExternalId(externalId);
-            customerMatches.addDuplicate(null);
+            customerMatches.setCustomer(customer);
         }
 
         return customerMatches;
@@ -137,21 +148,18 @@ public class CustomerSync {
 
     public CustomerMatches loadPerson(ExternalCustomer externalCustomer) {
         final String externalId = externalCustomer.getExternalId();
+        final Customer customer = customerDataAccess.loadPersonCustomer(externalId);
 
-        CustomerMatches customerMatches = customerDataAccess.loadPersonCustomer(externalId);
-
-        if (customerMatches.getCustomer() != null) {
-            if (!CustomerType.PERSON.equals(customerMatches.getCustomer().getCustomerType())) {
-                throw new ConflictException("Existing customer for externalCustomer " + externalId + " already exists and is not a person");
-            }
-
-            if (!"ExternalId".equals(customerMatches.getMatchTerm())) {
-                Customer customer = customerMatches.getCustomer();
-                customer.setExternalId(externalId);
-                customer.setMasterExternalId(externalId);
-            }
+        if (customer == null) {
+            return new CustomerMatches();
         }
 
+        if (!CustomerType.PERSON.equals(customer.getCustomerType())) {
+            throw new ConflictException("Existing customer for externalCustomer " + externalId + " already exists and is not a person");
+        }
+
+        CustomerMatches customerMatches = new CustomerMatches();
+        customerMatches.setCustomer(customer);
         return customerMatches;
     }
 }
