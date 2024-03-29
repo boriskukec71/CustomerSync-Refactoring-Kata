@@ -25,9 +25,6 @@ public class CustomerSync {
         Customer customer = customerMatches.getCustomer();
 
         if (customer == null) {
-            // createCustomer(externlaCustomer)
-            // created = true
-            // customerDataAccess.createCustomerRecord(customer);
             customer = new Customer();
             customer.setExternalId(externalCustomer.getExternalId());
             customer.setMasterExternalId(externalCustomer.getExternalId());
@@ -110,8 +107,8 @@ public class CustomerSync {
 
         final String externalId = externalCustomer.getExternalId();
         final String companyNumber = externalCustomer.getCompanyNumber();
-
         final Customer customer = customerDataAccess.loadCompanyCustomer(externalId, companyNumber);
+
         if (customer == null) {
             // Notihing found just exit and return empty matches
             return new CustomerMatches();
