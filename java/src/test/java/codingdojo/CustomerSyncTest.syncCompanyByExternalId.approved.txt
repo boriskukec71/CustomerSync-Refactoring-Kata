@@ -12,6 +12,7 @@ All Customers {
         preferredStore='null'
         address='null'
         shoppingLists=[]
+        bonusPointsBalance=null
     }
 
 }
@@ -25,6 +26,7 @@ ExternalCustomer {
     preferredStore='null'
     address='123 main st, SE-123 45 Helsingborg'
     shoppingLists=[[lipstick, blusher]]
+    bonusPointsBalance=null
 }
 AFTER:
 Fake Database.
@@ -40,6 +42,7 @@ All Customers {
         preferredStore='null'
         address='123 main st, SE-123 45 Helsingborg'
         shoppingLists=[[lipstick, blusher]]
+        bonusPointsBalance=null
     }
 
 }

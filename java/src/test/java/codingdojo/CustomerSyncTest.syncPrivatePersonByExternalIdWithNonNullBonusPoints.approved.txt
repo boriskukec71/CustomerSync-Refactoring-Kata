@@ -2,6 +2,19 @@ BEFORE:
 Fake Database.
 All Customers {
 
+    Customer {
+        externalId='12345'
+        masterExternalId='null'
+        companyNumber='null'
+        internalId='67576'
+        name='null'
+        customerType=PERSON
+        preferredStore='null'
+        address='null'
+        shoppingLists=[]
+        bonusPointsBalance=3
+    }
+
 }
 All Shopping Lists
 []
@@ -21,9 +34,9 @@ All Customers {
 
     Customer {
         externalId='12345'
-        masterExternalId='12345'
+        masterExternalId='null'
         companyNumber='null'
-        internalId='fake internalId'
+        internalId='67576'
         name='Joe Bloggs'
         customerType=PERSON
         preferredStore='Nordstan'

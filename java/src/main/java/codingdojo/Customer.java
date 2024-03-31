@@ -14,7 +14,7 @@ public class Customer {
     private String name;
     private CustomerType customerType;
     private String companyNumber;
-    private Integer bonusPointBalance;
+    private Integer bonusPointsBalance;
 
     public void setExternalId(String externalId) {
         this.externalId = externalId;
@@ -88,15 +88,14 @@ public class Customer {
         this.internalId = internalId;
     }
 
-    public Integer getBonusPointBalance() {
-        return bonusPointBalance;
+    public Integer getBonusPointsBalance() {
+        return bonusPointsBalance;
     }
 
-    public void setBonusPointBalance(Integer bonusPointBalance) {
-        this.bonusPointBalance = bonusPointBalance;
+    public void setBonusPointsBalance(Integer bonusPointsBalance) {
+        this.bonusPointsBalance = bonusPointsBalance;
     }
 
-    // TODO remove it
     public void addShoppingList(ShoppingList consumerShoppingList) {
         ArrayList<ShoppingList> newList = new ArrayList<ShoppingList>(this.shoppingLists);
         newList.add(consumerShoppingList);

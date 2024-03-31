@@ -14,6 +14,7 @@ public class CustomerPrinter {
         sb.append("\n" + indent + "    preferredStore='" + customer.getPreferredStore() + '\'');
         sb.append("\n" + indent + "    address=" + AddressPrinter.printAddress(customer.getAddress()));
         sb.append("\n" + indent + "    shoppingLists=" + ShoppingListPrinter.printShoppingLists(customer.getShoppingLists(), indent + "    ") );
+        sb.append("\n" + indent + "    bonusPointsBalance=" + String.valueOf(customer.getBonusPointsBalance()));
         sb.append("\n" + indent + "}");
         return sb.toString();
     }
