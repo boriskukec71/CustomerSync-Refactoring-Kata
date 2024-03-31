@@ -25,7 +25,7 @@ public class CustomerDataAccess {
             }
         }
 
-        if (customer != null && !CustomerType.COMPANY.equals(customer.getCustomerType())) {
+        if (!CustomerType.COMPANY.equals(customer.getCustomerType())) {
             throw new ConflictException("Existing customer for externalCustomer " + externalId + " already exists and is not a company");
         }
 

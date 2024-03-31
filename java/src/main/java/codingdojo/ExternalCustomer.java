@@ -22,11 +22,7 @@ public class ExternalCustomer {
     public boolean isCompany() {
         return companyNumber != null;
     }
-
-    public Address getPostalAddress() {
-        return address;
-    }
-
+    
     public String getName() {
         return name;
     }

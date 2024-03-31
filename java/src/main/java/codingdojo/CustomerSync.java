@@ -16,7 +16,7 @@ public class CustomerSync {
 
     public boolean syncWithDataLayer(ExternalCustomer externalCustomer) {
 
-        CustomerMatches customerMatches = findCustomerMatches(externalCustomer);
+        final CustomerMatches customerMatches = findCustomerMatches(externalCustomer);
         Customer customer = customerMatches.getCustomer();
         boolean created = false;
 
@@ -49,7 +49,7 @@ public class CustomerSync {
     }
 
     private void updateRelations(ExternalCustomer externalCustomer, Customer customer) {
-        List<ShoppingList> consumerShoppingLists = externalCustomer.getShoppingLists();
+        final List<ShoppingList> consumerShoppingLists = externalCustomer.getShoppingLists();
         for (ShoppingList consumerShoppingList : consumerShoppingLists) {
             customerDataAccess.updateShoppingList(customer, consumerShoppingList);
         }
@@ -75,7 +75,7 @@ public class CustomerSync {
     }
 
     private void updateContactInfo(ExternalCustomer externalCustomer, Customer customer) {
-        customer.setAddress(externalCustomer.getPostalAddress());
+        customer.setAddress(externalCustomer.getAddress());
     }
 
     public CustomerMatches findCustomerMatches(ExternalCustomer externalCustomer) {
@@ -85,7 +85,7 @@ public class CustomerSync {
         }
         // otherwise load the customer as a person and return a simple customer match
         final Customer customer = customerDataAccess.loadPersonCustomer(externalCustomer);
-        CustomerMatches customerMatches = new CustomerMatches();
+        final CustomerMatches customerMatches = new CustomerMatches();
         customerMatches.setCustomer(customer);
         return customerMatches;
     }
@@ -99,17 +99,17 @@ public class CustomerSync {
 
         final String externalId = externalCustomer.getExternalId();
         final String companyNumber = externalCustomer.getCompanyNumber();
-        String customerExternalId = customer.getExternalId();
-        CustomerMatches customerMatches = new CustomerMatches();
+        final String customerExternalId = customer.getExternalId();
+        final CustomerMatches customerMatches = new CustomerMatches();
 
         if (customerExternalId != null) {
-            String customerCompanyNumber = customer.getCompanyNumber();
+            final String customerCompanyNumber = customer.getCompanyNumber();
             if (!companyNumber.equals(customerCompanyNumber)) { // company number does not match add as duplicate
                 customerMatches.addDuplicate(customer);
             } else {
                 customerMatches.setCustomer(customer);
             }
-            Customer customerByMaster = customerDataAccess.findByMasterExternalId(externalId);
+            final Customer customerByMaster = customerDataAccess.findByMasterExternalId(externalId);
             if (customerByMaster != null) { // customer found by masterExternalId, add it as a duplciate
                 customerMatches.addDuplicate(customerByMaster);
             }
