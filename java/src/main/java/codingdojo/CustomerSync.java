@@ -85,25 +85,23 @@ public class CustomerSync {
             return findCompanyMatches(externalCustomer);
         }
         // otherwise load the customer as a person and return a simple customer match
-        final Customer customer = customerDataAccess.loadPersonCustomer(externalCustomer);
+        final Customer customer = customerDataAccess.loadPersonCustomer(externalCustomer.getExternalId());
         final CustomerMatches customerMatches = new CustomerMatches();
         customerMatches.setCustomer(customer);
         return customerMatches;
     }
 
     private CustomerMatches findCompanyMatches(ExternalCustomer externalCustomer) {
-
-        final Customer customer = customerDataAccess.loadCompanyCustomer(externalCustomer);        
+        final String externalId = externalCustomer.getExternalId();
+        final String companyNumber = externalCustomer.getCompanyNumber();
+        final Customer customer = customerDataAccess.loadCompanyCustomer(externalId, companyNumber);        
         if (customer == null) {
             return new CustomerMatches();
         }
 
-        final String externalId = externalCustomer.getExternalId();
-        final String companyNumber = externalCustomer.getCompanyNumber();
-        final String customerExternalId = customer.getExternalId();
         final CustomerMatches customerMatches = new CustomerMatches();
 
-        if (customerExternalId != null) {
+        if (customer.getExternalId() != null) {
             final String customerCompanyNumber = customer.getCompanyNumber();
             if (!companyNumber.equals(customerCompanyNumber)) { // company number does not match add as duplicate
                 customerMatches.addDuplicate(customer);

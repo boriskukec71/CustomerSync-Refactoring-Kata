@@ -8,10 +8,7 @@ public class CustomerDataAccess {
         this.customerDataLayer = customerDataLayer;
     }
 
-    public Customer loadCompanyCustomer(ExternalCustomer externalCustomer) {
-        // TODO check for inputs
-        final String externalId = externalCustomer.getExternalId();
-        final String companyNumber = externalCustomer.getCompanyNumber();
+    public Customer loadCompanyCustomer(String externalId, String companyNumber) {
         Customer customer = customerDataLayer.findByExternalId(externalId);
 
         if (customer == null) {
@@ -32,8 +29,7 @@ public class CustomerDataAccess {
         return customer;
     }
 
-    public Customer loadPersonCustomer(ExternalCustomer externalCustomer) {
-        final String externalId = externalCustomer.getExternalId();
+    public Customer loadPersonCustomer(String externalId) {
         final Customer customer = customerDataLayer.findByExternalId(externalId);
 
         if (customer != null && !CustomerType.PERSON.equals(customer.getCustomerType())) {
