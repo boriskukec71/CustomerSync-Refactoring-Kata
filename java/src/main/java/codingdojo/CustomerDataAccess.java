@@ -8,32 +8,33 @@ public class CustomerDataAccess {
         this.customerDataLayer = customerDataLayer;
     }
 
-    public Customer loadCompanyCustomer(String externalId, String companyNumber) {
-        Customer customer = customerDataLayer.findByExternalId(externalId);
-
-        if (customer == null) {
-            customer = customerDataLayer.findByCompanyNumber(companyNumber);
-            if (customer == null) {
-                return null; 
-            }
-            String customerExternalId = customer.getExternalId();
-            if (customerExternalId != null && !externalId.equals(customerExternalId)) {
-                throw new ConflictException("Existing customer for externalCustomer " + companyNumber + " doesn't match external id " + externalId + " instead found " + customerExternalId );
-            }
+    public Customer findCompanyByExternalIdOrCompanyNumber(String externalId, String companyNumber) {
+        Customer customer = findCustomer(CustomerType.COMPANY, externalId);
+        if (customer != null) {
+            return customer;
         }
 
-        if (!CustomerType.COMPANY.equals(customer.getCustomerType())) {
-            throw new ConflictException("Existing customer for externalCustomer " + externalId + " already exists and is not a company");
+        customer = customerDataLayer.findByCompanyNumber(companyNumber);
+        if (customer != null) {
+            String customerExternalId = customer.getExternalId();
+            if (customerExternalId != null && !externalId.equals(customerExternalId)) {
+                throw new ConflictException("Existing customer for externalCustomer " + companyNumber
+                        + " doesn't match external id " + externalId + " instead found " + customerExternalId);
+            }
         }
 
         return customer;
     }
 
-    public Customer loadPersonCustomer(String externalId) {
+    public Customer findPerson(String externalId) {
+        return findCustomer(CustomerType.PERSON, externalId);
+    }
+
+    private Customer findCustomer(CustomerType customerType, String externalId) {
         final Customer customer = customerDataLayer.findByExternalId(externalId);
 
-        if (customer != null && !CustomerType.PERSON.equals(customer.getCustomerType())) {
-            throw new ConflictException("Existing customer for externalCustomer " + externalId + " already exists and is not a person");
+        if (customer != null && customerType != customer.getCustomerType()) {
+            throw new ConflictException("Existing customer for externalCustomer " + externalId + " already exists and is not a " + customerType);
         }
 
         return customer;
