@@ -14,6 +14,7 @@ public class Customer {
     private String name;
     private CustomerType customerType;
     private String companyNumber;
+    private Integer bonusPointsBalance;
 
     public void setExternalId(String externalId) {
         this.externalId = externalId;
@@ -85,6 +86,14 @@ public class Customer {
 
     public void setInternalId(String internalId) {
         this.internalId = internalId;
+    }
+
+    public Integer getBonusPointsBalance() {
+        return bonusPointsBalance;
+    }
+
+    public void setBonusPointsBalance(Integer bonusPointsBalance) {
+        this.bonusPointsBalance = bonusPointsBalance;
     }
 
     public void addShoppingList(ShoppingList consumerShoppingList) {

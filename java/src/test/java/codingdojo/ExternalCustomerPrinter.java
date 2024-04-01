@@ -9,8 +9,9 @@ public class ExternalCustomerPrinter {
         sb.append("\n" + indent + "    companyNumber='" + externalCustomer.getCompanyNumber() + '\'' );
         sb.append("\n" + indent + "    name='" + externalCustomer.getName() + '\'' );
         sb.append("\n" + indent + "    preferredStore='" + externalCustomer.getPreferredStore() + '\'');
-        sb.append("\n" + indent + "    address=" + AddressPrinter.printAddress(externalCustomer.getPostalAddress()));
+        sb.append("\n" + indent + "    address=" + AddressPrinter.printAddress(externalCustomer.getAddress()));
         sb.append("\n" + indent + "    shoppingLists=" + ShoppingListPrinter.printShoppingLists(externalCustomer.getShoppingLists(), indent + "    ") );
+        sb.append("\n" + indent + "    bonusPointsBalance=" +  String.valueOf(externalCustomer.getBonusPointsBalance()));
         sb.append("\n" + indent + "}");
 
         return sb.toString();
