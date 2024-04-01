@@ -31,7 +31,7 @@ public class CustomerSync {
         updateContactInfo(externalCustomer, customer);
 
         if (customerMatches.hasDuplicates()) {
-            customerMatches.getDuplicates().forEach(duplciate -> updateDuplicate(externalCustomer, duplciate));
+            customerMatches.getDuplicates().forEach(duplicate -> updateDuplicate(externalCustomer, duplicate));
         }
 
         updateRelations(externalCustomer, customer);
